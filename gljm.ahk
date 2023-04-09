@@ -8,8 +8,12 @@ GroupAdd DragGroup, AllWindows
     MouseGetPos, cur_win_x, cur_win_y, window_id
     WinGet, window_minmax, MinMax, ahk_id %window_id%
 
+    ; 获取类名, 看是不是桌面
+    WinGetClass, window_class, ahk_id %window_id%
+
     ; Return if the window is maximized or minimized
-    if window_minmax <> 0
+    ;; WorkerW 是桌面的类名
+    if (window_minmax <> 0 or window_class = "WorkerW")
     {
       return
     }
@@ -22,7 +26,7 @@ GroupAdd DragGroup, AllWindows
       ; move the window based on cursor position
       MouseGetPos, cur_x, cur_y
       WinMove, ahk_id %window_id%, , (cur_x - cur_win_x), (cur_y - cur_win_y)
-    } Until !GetKeyState("LButton", "P")
+    } Until (!GetKeyState("LButton", "P") or !GetKeyState("LWin", "P"))
 
     return
 
@@ -31,6 +35,13 @@ GroupAdd DragGroup, AllWindows
     CoordMode, Mouse, Screen
     ;; 获取当前鼠标的位置和对应的窗口
     MouseGetPos, cur_win_x, cur_win_y, window_id
+
+    ; 获取类名, 看是不是桌面
+    WinGetClass, window_class, ahk_id %window_id%
+    if (window_class = "WorkerW")
+    {
+      return
+    }
 
     ;; 获取当前窗口的宽高
     WinGetPos, ,, cur_win_width, cur_win_height, ahk_id %window_id%
@@ -41,7 +52,7 @@ GroupAdd DragGroup, AllWindows
       ;; 根据鼠标移动的位置差值, 调整窗口大小
       MouseGetPos, cur_x, cur_y
       WinMove, ahk_id %window_id%, , , , cur_win_width + (cur_x - cur_win_x), cur_win_height + (cur_y - cur_win_y)
-    } Until !GetKeyState("RButton", "P")
+    } Until (!GetKeyState("RButton", "P") or !GetKeyState("LWin", "P"))
 
     return
 
