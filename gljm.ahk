@@ -5,12 +5,15 @@ GroupAdd DragGroup, AllWindows
   #LButton::
     ;; 坐标系是活动的窗口, 而不是屏幕
     CoordMode, Mouse, Relative
-    MouseGetPos, cur_win_x, cur_win_y, window_id
+    ;; 激活指定窗口, MouseGetPos 获取的x,y位置是相对于活动窗口的
+    MouseGetPos, , , window_id
+    WinActivate ahk_id %window_id%
+    ;; 先激活再取坐标
+    MouseGetPos, cur_win_x, cur_win_y
     WinGet, window_minmax, MinMax, ahk_id %window_id%
 
     ; 获取类名, 看是不是桌面
     WinGetClass, window_class, ahk_id %window_id%
-
     ; Return if the window is maximized or minimized
     ;; WorkerW 是桌面的类名
     if (window_minmax <> 0 or window_class = "WorkerW")
@@ -25,10 +28,12 @@ GroupAdd DragGroup, AllWindows
     {
       ; move the window based on cursor position
       MouseGetPos, cur_x, cur_y
+      ; msgbox %cur_x%, %cur_y%, %cur_win_x%, %cur_win_y%, %window_id%
       WinMove, ahk_id %window_id%, , (cur_x - cur_win_x), (cur_y - cur_win_y)
     } Until (!GetKeyState("LButton", "P") or !GetKeyState("LWin", "P"))
 
     return
+
 
   #RButton::
     ;; 坐标系是整个屏幕
