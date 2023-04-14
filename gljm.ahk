@@ -1,5 +1,4 @@
 GroupAdd OneNoteGroup, ahk_exe onenote.exe
-GroupAdd DragGroup, AllWindows
 
 ;;Drag
   #LButton::
@@ -7,7 +6,7 @@ GroupAdd DragGroup, AllWindows
     CoordMode, Mouse, Relative
     ;; 激活指定窗口, MouseGetPos 获取的x,y位置是相对于活动窗口的
     MouseGetPos, , , window_id
-    WinActivate ahk_id %window_id%
+    WinActivate, ahk_id %window_id%
     ;; 先激活再取坐标
     MouseGetPos, cur_win_x, cur_win_y
     WinGet, window_minmax, MinMax, ahk_id %window_id%
@@ -98,7 +97,6 @@ GroupAdd DragGroup, AllWindows
     else {
        Send,{Up}
   }
-  Send,{Up}
   return
 
   ;;光标下移
@@ -110,7 +108,6 @@ GroupAdd DragGroup, AllWindows
     else {
        Send,{Down}
   }
-  Send,{Down}
   return
 
   ;;光标移动到下个单词
